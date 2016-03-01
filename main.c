@@ -82,7 +82,7 @@ int main()
 
     uint64_t start = mach_absolute_time();
     uint64_t end = mach_absolute_time();
-    printf("TESTING TIME TO EXECUTE mach_absolute_time()\n  Result: %lld nanoseconds\n\n", end - start);
+    printf("TESTING TIME TO EXECUTE mach_absolute_time()\n  Result: %"PRIu64" nanoseconds\n\n", end - start);
 
     reg_zero = _mm_set_epi32(0, 0, 0, 0);
     reg_one = _mm_set_epi32(-1, -1, -1, -1);
