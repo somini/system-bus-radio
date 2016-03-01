@@ -11,6 +11,7 @@
 #include <mach/mach_time.h>
 #endif
 #include <math.h>
+#include <string.h>
 
 #ifndef NSEC_PER_SEC
 #define NSEC_PER_SEC 1000000000ull
@@ -71,7 +72,7 @@ static inline void square_am_signal(float time, float frequency) {
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 #ifdef __MACH__
     mach_timebase_info_data_t theTimeBaseInfo;
@@ -84,35 +85,37 @@ int main()
     uint64_t end = mach_absolute_time();
     printf("TESTING TIME TO EXECUTE mach_absolute_time()\n  Result: %"PRIu64" nanoseconds\n\n", end - start);
 
-    reg_zero = _mm_set_epi32(0, 0, 0, 0);
-    reg_one = _mm_set_epi32(-1, -1, -1, -1);
-
-    while (1) {
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.400, 2093);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.790, 2673);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.790, 2349);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 3136);
-        square_am_signal(0.790, 3136);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.400, 2093);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.400, 2673);
-        square_am_signal(0.400, 2349);
-        square_am_signal(0.790, 2093);
+	reg_zero = _mm_set_epi32(0, 0, 0, 0);
+	reg_one = _mm_set_epi32(-1, -1, -1, -1);
+  FILE* fp;
+  if (argc == 2) {
+    fp = fopen(argv[1], "r");
+  } else {
+    puts("Supply file to read song from.");
+    exit(1);
+  }
+  char buffer[256];
+	while (1) {
+    fgets(buffer, 256 - 1, fp);
+    if (strlen(buffer) == 0) {
+      /* skip blank lines */
+      continue;
     }
+    if (!strncmp(":beep", buffer, strlen(":beep"))) {
+      int t;
+      int f;
+      if(sscanf(buffer, ":beep frequency=%d length=%dms",  &f, &t) == 0) {
+        continue;
+      }
+      printf("F: %d, T: %d\n", f, t);
+      square_am_signal(t / 1000.0, f);
+    } else if (!strncmp(":delay", buffer, strlen(":delay"))) {
+      int d;
+      if (sscanf(buffer, ":delay %dms", &d) == 0) {
+        continue;
+      }
+      printf("D: %d\n", d);
+      square_am_signal(d / 1000.0, 0);
+    }
+	}
 }
