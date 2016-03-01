@@ -67,6 +67,8 @@ Notes on high precision time APIs for Mac:
   * http://stackoverflow.com/a/21352348/300224
   * https://stackoverflow.com/questions/5167269/clock-gettime-alternative-in-mac-os-x
 * Sleep
+  * mach_wait_until()
+    * Notes https://developer.apple.com/library/ios/technotes/tn2169/_index.html
   * nanosleep()
     * Apple doc https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man2/nanosleep.2.html
     * Definition https://opensource.apple.com/source/Libc/Libc-320.1.3/gen/nanosleep.c?txt
