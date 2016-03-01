@@ -15,7 +15,7 @@ mach_port_t clock_port;
 mach_timespec_t remain;
 
 static inline void square_am_signal(float time, float frequency) {
-    printf("Playing / %0.3f seconds / %4.0f Hzn", time, frequency);
+    printf("Playing / %0.3f seconds / %4.0f Hz\n", time, frequency);
     uint64_t period = NSEC_PER_SEC / frequency;
 
     uint64_t start = mach_absolute_time();
@@ -38,11 +38,11 @@ int main()
     mach_timebase_info_data_t theTimeBaseInfo;
     mach_timebase_info(&theTimeBaseInfo);
     puts("TESTING TIME BASE: the following should be 1 / 1");
-    printf("  Mach base: %u / %u nanosecondsnn", theTimeBaseInfo.numer, theTimeBaseInfo.denom);
+    printf("  Mach base: %u / %u nanoseconds\n\n", theTimeBaseInfo.numer, theTimeBaseInfo.denom);
 
     uint64_t start = mach_absolute_time();
     uint64_t end = mach_absolute_time();
-    printf("TESTING TIME TO EXECUTE mach_absolute_time()n  Result: %lld nanosecondsnn", end - start);
+    printf("TESTING TIME TO EXECUTE mach_absolute_time()\n  Result: %lld nanoseconds\n\n", end - start);
 
     reg_zero = _mm_set_epi32(0, 0, 0, 0);
     reg_one = _mm_set_epi32(-1, -1, -1, -1);
